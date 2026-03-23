@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <body>
+    <h1>Orders</h1>
+
+    <input id="name" placeholder="order name" />
+    <button onclick="create()">Create</button>
+
+    <ul id="list"></ul>
+
+    <script>
+      async function create() {
+        const name = document.getElementById("name").value;
+
+        await fetch("/api/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name }),
+        });
+
+        load();
+      }
+
+      async function load() {
+        const res = await fetch("/api/orders");
+        const data = await res.json();
+
+        const list = document.getElementById("list");
+        list.innerHTML = "";
+
+        data.forEach((o) => {
+          const li = document.createElement("li");
+          li.innerText = o.id + " - " + o.name;
+          list.appendChild(li);
+        });
+      }
+
+      load();
+    </script>
+  </body>
+</html>
